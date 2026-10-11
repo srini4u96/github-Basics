@@ -1,0 +1,15 @@
+{
+  "platform": "salesforce",
+  "artifacts": [
+    {
+      "type": "apex_trigger",
+      "type_label": "Apex Trigger",
+      "name": "OpportunityTrigger",
+      "target": "Opportunity",
+      "description": "Keeps the account's open pipeline total up to date.",
+      "trigger": {"when": "after insert, after update"},
+      "language": "apex",
+      "scripts": {"Body": "trigger OpportunityTrigger on Opportunity (after insert, after update) {\n    PipelineService.recalculate(Trigger.new);\n}"}
+    }
+  ]
+}

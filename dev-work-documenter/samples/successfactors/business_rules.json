@@ -1,0 +1,55 @@
+{
+  "d": {
+    "results": [
+      {
+        "__metadata": {"type": "SFOData.Rule"},
+        "ruleId": "JI_Default_Probation_End",
+        "ruleName": "Default probation end date",
+        "baseObject": "Job Information",
+        "ruleScenario": "Basic",
+        "event": "onSave",
+        "status": "A",
+        "description": "Sets the probation end date to 6 months after hire for permanent employees in Germany.",
+        "createdBy": "sf.admin.mike",
+        "lastModifiedBy": "sf.admin.mike",
+        "lastModifiedDateTime": "2026-09-28T14:02:00",
+        "conditions": [
+          {"if": "Job Information.Event Reason = 'Hire' AND Job Information.Country = 'DEU' AND Job Information.Employee Type = 'Permanent'",
+           "then": ["Set Job Information.Probation Period End Date to AddMonths(Job Information.Start Date, 6)"]},
+          {"if": "Job Information.Event Reason = 'Hire' AND Job Information.Employee Type = 'Fixed Term'",
+           "then": ["Set Job Information.Probation Period End Date to AddMonths(Job Information.Start Date, 3)",
+                    "Raise Message 'Probation shortened for fixed-term contract'"]}
+        ]
+      },
+      {
+        "ruleId": "COMP_Validate_Salary_Band",
+        "ruleName": "Validate salary within pay range",
+        "baseObject": "Compensation Information",
+        "ruleScenario": "Validation",
+        "event": "onSave",
+        "status": "A",
+        "description": "",
+        "createdBy": "sf.admin.priya",
+        "lastModifiedBy": "sf.admin.priya",
+        "lastModifiedDateTime": "2026-09-29T09:41:00",
+        "conditions": [
+          {"if": "Compensation Information.Total Annual Salary > Pay Range.Maximum",
+           "then": ["Raise Message 'Salary exceeds the pay range maximum' (Severity: Error)"]},
+          {"if": "Compensation Information.Total Annual Salary < Pay Range.Minimum",
+           "then": ["Raise Message 'Salary below the pay range minimum' (Severity: Warning)",
+                    "Trigger Workflow COMP_EXCEPTION_APPROVAL"]}
+        ]
+      },
+      {
+        "ruleId": "EMP_Set_Badge_Request",
+        "ruleName": "Create badge request on hire",
+        "baseObject": "Employment Details",
+        "ruleScenario": "",
+        "event": "",
+        "status": "I",
+        "createdBy": "sf.admin.mike",
+        "conditions": "Set Badge Request.Status to 'New'; Execute Rule JI_Default_Probation_End"
+      }
+    ]
+  }
+}
