@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='utf-8'?>
+<unload unload_date="2026-10-01 09:00:00">
+  <sys_remote_update_set action="INSERT_OR_UPDATE">
+    <name>STRY0012345 - Incident auto-assignment</name>
+    <application_name>Global</application_name>
+    <description>Route new incidents to the right group automatically and escalate P1s.</description>
+    <sys_created_by>jane.dev</sys_created_by>
+    <state>loaded</state>
+  </sys_remote_update_set>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_script_include_a1000000000000000000000000000001</name>
+    <type>sys_script_include</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script_include"&gt;&lt;sys_script_include action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;IncidentAssignmentUtils&lt;/name&gt;&lt;api_name&gt;global.IncidentAssignmentUtils&lt;/api_name&gt;&lt;client_callable&gt;true&lt;/client_callable&gt;&lt;access&gt;package_private&lt;/access&gt;&lt;active&gt;true&lt;/active&gt;&lt;script&gt;var IncidentAssignmentUtils = Class.create();
+IncidentAssignmentUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+
+    // Finds the support group for a category using the u_assignment_matrix table.
+    getGroupForCategory: function(category, location) {
+        var matrix = new GlideRecord('u_assignment_matrix');
+        matrix.addQuery('u_category', category);
+        matrix.addQuery('u_location', location);
+        matrix.addActiveQuery();
+        matrix.orderBy('u_priority');
+        matrix.setLimit(1);
+        matrix.query();
+        if (matrix.next()) {
+            return matrix.getValue('u_group');
+        }
+        // Fall back to the default service desk group configured in a property
+        return gs.getProperty('x_acme.incident.default_group');
+    },
+
+    /* Called from the client script via GlideAjax */
+    ajaxGetGroup: function() {
+        var category = this.getParameter('sysparm_category');
+        var location = this.getParameter('sysparm_location');
+        var groupId = this.getGroupForCategory(category, location);
+        var group = new GlideRecord('sys_user_group');
+        if (group.get(groupId)) {
+            return JSON.stringify({ sys_id: groupId, name: group.getDisplayValue() });
+        }
+        return '';
+    },
+
+    type: 'IncidentAssignmentUtils'
+});&lt;/script&gt;&lt;description&gt;Looks up the right support group for an incident from the assignment matrix.&lt;/description&gt;&lt;/sys_script_include&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_script_b1000000000000000000000000000001</name>
+    <type>sys_script</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script"&gt;&lt;sys_script action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;b1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;Auto-assign incident by category&lt;/name&gt;&lt;collection&gt;incident&lt;/collection&gt;&lt;when&gt;before&lt;/when&gt;&lt;order&gt;100&lt;/order&gt;&lt;action_insert&gt;true&lt;/action_insert&gt;&lt;action_update&gt;false&lt;/action_update&gt;&lt;advanced&gt;true&lt;/advanced&gt;&lt;active&gt;true&lt;/active&gt;&lt;condition&gt;current.category.changes() || current.assignment_group.nil()&lt;/condition&gt;&lt;script&gt;(function executeRule(current, previous /*null when async*/) {
+    // Only auto-assign when the caller did not pick a group
+    if (!current.assignment_group.nil())
+        return;
+
+    var utils = new IncidentAssignmentUtils();
+    var groupId = utils.getGroupForCategory(current.getValue('category'), current.getValue('location'));
+    if (groupId) {
+        current.assignment_group = groupId;
+        current.work_notes = 'Auto-assigned by category matrix';
+        gs.eventQueue('x_acme.incident.auto_assigned', current, groupId, current.getValue('category'));
+    } else {
+        gs.addErrorMessage('No assignment group found for this category. Please choose one.');
+        current.setAbortAction(true);
+    }
+})(current, previous);&lt;/script&gt;&lt;description&gt;Sets the assignment group on new incidents using the category matrix.&lt;/description&gt;&lt;/sys_script&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_script_b1000000000000000000000000000002</name>
+    <type>sys_script</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script"&gt;&lt;sys_script action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;b1000000000000000000000000000002&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;Sync priority to incident tasks&lt;/name&gt;&lt;collection&gt;incident&lt;/collection&gt;&lt;when&gt;after&lt;/when&gt;&lt;order&gt;200&lt;/order&gt;&lt;action_insert&gt;false&lt;/action_insert&gt;&lt;action_update&gt;true&lt;/action_update&gt;&lt;advanced&gt;true&lt;/advanced&gt;&lt;active&gt;true&lt;/active&gt;&lt;filter_condition&gt;priorityVALCHANGES^EQ&lt;/filter_condition&gt;&lt;script&gt;(function executeRule(current, previous) {
+    // Copy the priority to all child tasks so SLAs stay aligned
+    var task = new GlideRecord('incident_task');
+    task.addQuery('incident', current.sys_id);
+    task.query();
+    while (task.next()) {
+        task.priority = current.priority;
+        task.update();
+    }
+    current.u_last_priority_sync = new GlideDateTime();
+    current.update();
+    gs.log('Priority synced for ' + current.number);
+})(current, previous);&lt;/script&gt;&lt;description /&gt;&lt;/sys_script&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_script_client_c1000000000000000000000000000001</name>
+    <type>sys_script_client</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script_client"&gt;&lt;sys_script_client action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;c1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;Suggest group on category change&lt;/name&gt;&lt;table&gt;incident&lt;/table&gt;&lt;type&gt;onChange&lt;/type&gt;&lt;field_name&gt;category&lt;/field_name&gt;&lt;ui_type&gt;10&lt;/ui_type&gt;&lt;active&gt;true&lt;/active&gt;&lt;script&gt;function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+    if (isLoading || newValue === '') {
+        return;
+    }
+    // Ask the server which group handles this category and pre-fill it
+    var ga = new GlideAjax('IncidentAssignmentUtils');
+    ga.addParam('sysparm_name', 'ajaxGetGroup');
+    ga.addParam('sysparm_category', newValue);
+    ga.addParam('sysparm_location', g_form.getValue('location'));
+    ga.getXMLAnswer(function(answer) {
+        if (!answer) {
+            g_form.showFieldMsg('category', 'No default group for this category', 'info');
+            return;
+        }
+        var group = JSON.parse(answer);
+        g_form.setValue('assignment_group', group.sys_id, group.name);
+    });
+}&lt;/script&gt;&lt;description&gt;Pre-fills the assignment group on the form as soon as the category is chosen.&lt;/description&gt;&lt;/sys_script_client&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sysauto_script_d1000000000000000000000000000001</name>
+    <type>sysauto_script</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sysauto_script"&gt;&lt;sysauto_script action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;d1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;Re-route stale default group incidents&lt;/name&gt;&lt;run_type&gt;daily&lt;/run_type&gt;&lt;run_time&gt;1970-01-01 02:00:00&lt;/run_time&gt;&lt;active&gt;true&lt;/active&gt;&lt;script&gt;// Nightly: re-route incidents stuck in the default group for more than 4 hours
+var gr = new GlideRecord('incident');
+gr.addEncodedQuery('active=true^assignment_group=d625dccec0a8016700a222a0f7900d06^sys_updated_onRELATIVELT@hour@ago@4');
+gr.query();
+var utils = new IncidentAssignmentUtils();
+while (gr.next()) {
+    var groupId = utils.getGroupForCategory(gr.getValue('category'), gr.getValue('location'));
+    if (groupId) {
+        gr.assignment_group = groupId;
+        gr.setWorkflow(false);
+        gr.update();
+    }
+}&lt;/script&gt;&lt;description&gt;Nightly clean-up of incidents parked in the default group.&lt;/description&gt;&lt;/sysauto_script&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sysevent_email_action_e1000000000000000000000000000001</name>
+    <type>sysevent_email_action</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sysevent_email_action"&gt;&lt;sysevent_email_action action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;e1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;Incident auto-assigned - notify group&lt;/name&gt;&lt;collection&gt;incident&lt;/collection&gt;&lt;event_name&gt;x_acme.incident.auto_assigned&lt;/event_name&gt;&lt;subject&gt;${number} has been assigned to your group&lt;/subject&gt;&lt;recipient_groups&gt;event.parm1&lt;/recipient_groups&gt;&lt;active&gt;true&lt;/active&gt;&lt;description&gt;Tells the group manager when an incident was routed to them automatically.&lt;/description&gt;&lt;/sysevent_email_action&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_properties_f1000000000000000000000000000001</name>
+    <type>sys_properties</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_properties"&gt;&lt;sys_properties action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;f1000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;x_acme.incident.default_group&lt;/name&gt;&lt;value&gt;d625dccec0a8016700a222a0f7900d06&lt;/value&gt;&lt;type&gt;string&lt;/type&gt;&lt;description&gt;Fallback assignment group when no matrix entry matches.&lt;/description&gt;&lt;/sys_properties&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_db_object_a2000000000000000000000000000001</name>
+    <type>sys_db_object</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_db_object"&gt;&lt;sys_db_object action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a2000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;u_assignment_matrix&lt;/name&gt;&lt;label&gt;Assignment Matrix&lt;/label&gt;&lt;super_class /&gt;&lt;access&gt;public&lt;/access&gt;&lt;/sys_db_object&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_dictionary_a3000000000000000000000000000001</name>
+    <type>sys_dictionary</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_dictionary"&gt;&lt;sys_dictionary action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a3000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;u_assignment_matrix&lt;/name&gt;&lt;element&gt;u_group&lt;/element&gt;&lt;column_label&gt;Group&lt;/column_label&gt;&lt;internal_type display_value="Reference"&gt;reference&lt;/internal_type&gt;&lt;reference display_value="sys_user_group"&gt;sys_user_group&lt;/reference&gt;&lt;mandatory&gt;true&lt;/mandatory&gt;&lt;/sys_dictionary&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_hub_flow_f1a0000000000000000000000000f10w</name>
+    <type>sys_hub_flow</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_hub_flow"&gt;&lt;sys_hub_flow action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;f1a0000000000000000000000000f10w&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;name&gt;P1 incident escalation&lt;/name&gt;&lt;internal_name&gt;p1_incident_escalation&lt;/internal_name&gt;&lt;type&gt;flow&lt;/type&gt;&lt;run_as&gt;system&lt;/run_as&gt;&lt;status&gt;published&lt;/status&gt;&lt;active&gt;true&lt;/active&gt;&lt;description&gt;Pages the on-call manager and opens a major incident bridge for P1 incidents.&lt;/description&gt;&lt;/sys_hub_flow&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_hub_trigger_instance_a4000000000000000000000000000001</name>
+    <type>sys_hub_trigger_instance</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_hub_trigger_instance"&gt;&lt;sys_hub_trigger_instance action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a4000000000000000000000000000001&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;flow display_value="P1 incident escalation"&gt;f1a0000000000000000000000000f10w&lt;/flow&gt;&lt;trigger_type&gt;Created or Updated&lt;/trigger_type&gt;&lt;table&gt;incident&lt;/table&gt;&lt;condition&gt;priority=1^active=true&lt;/condition&gt;&lt;/sys_hub_trigger_instance&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_hub_action_instance_a4000000000000000000000000000002</name>
+    <type>sys_hub_action_instance</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_hub_action_instance"&gt;&lt;sys_hub_action_instance action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a4000000000000000000000000000002&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;flow display_value="P1 incident escalation"&gt;f1a0000000000000000000000000f10w&lt;/flow&gt;&lt;order&gt;1&lt;/order&gt;&lt;action_type display_value="Look Up Record"&gt;x1&lt;/action_type&gt;&lt;comment&gt;Find the on-call manager for the assignment group&lt;/comment&gt;&lt;/sys_hub_action_instance&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_hub_action_instance_a4000000000000000000000000000003</name>
+    <type>sys_hub_action_instance</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_hub_action_instance"&gt;&lt;sys_hub_action_instance action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a4000000000000000000000000000003&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;flow display_value="P1 incident escalation"&gt;f1a0000000000000000000000000f10w&lt;/flow&gt;&lt;order&gt;2&lt;/order&gt;&lt;action_type display_value="Send Notification"&gt;x2&lt;/action_type&gt;&lt;comment&gt;Page the on-call manager&lt;/comment&gt;&lt;/sys_hub_action_instance&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+  <sys_update_xml action="INSERT_OR_UPDATE">
+    <action>INSERT_OR_UPDATE</action>
+    <name>sys_hub_action_instance_a4000000000000000000000000000004</name>
+    <type>sys_hub_action_instance</type>
+    <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_hub_action_instance"&gt;&lt;sys_hub_action_instance action="INSERT_OR_UPDATE"&gt;&lt;sys_id&gt;a4000000000000000000000000000004&lt;/sys_id&gt;&lt;sys_scope&gt;global&lt;/sys_scope&gt;&lt;sys_created_by&gt;jane.dev&lt;/sys_created_by&gt;&lt;sys_updated_by&gt;jane.dev&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-30 10:15:00&lt;/sys_updated_on&gt;&lt;flow display_value="P1 incident escalation"&gt;f1a0000000000000000000000000f10w&lt;/flow&gt;&lt;order&gt;3&lt;/order&gt;&lt;action_type display_value="Update Record"&gt;x3&lt;/action_type&gt;&lt;comment&gt;Set major incident state to 'Proposed'&lt;/comment&gt;&lt;/sys_hub_action_instance&gt;&lt;/record_update&gt;</payload>
+  </sys_update_xml>
+</unload>

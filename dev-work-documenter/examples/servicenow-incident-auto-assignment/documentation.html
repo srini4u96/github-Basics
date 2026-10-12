@@ -1,0 +1,283 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STRY0012345 - Incident auto-assignment</title><style>
+:root{--bg:#fbfbfa;--panel:#fff;--fg:#1d1d1f;--muted:#6b6b70;--line:#e4e4e7;--accent:#2f5bd3;--code:#f3f3f5;
+--high:#c62828;--medium:#b45f06;--diagram:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141416;--panel:#1c1c1f;--fg:#ececef;--muted:#9a9aa2;
+--line:#2c2c31;--accent:#8ab0ff;--code:#232328;--high:#ff7b72;--medium:#f0b45a;--diagram:#ececef;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141416;--panel:#1c1c1f;--fg:#ececef;--muted:#9a9aa2;--line:#2c2c31;--accent:#8ab0ff;
+--code:#232328;--high:#ff7b72;--medium:#f0b45a;--diagram:#ececef;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+nav{border-right:1px solid var(--line);padding:20px 16px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto;background:var(--panel)}
+nav h1{font-size:16px;margin:0 0 12px}nav input{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;
+background:var(--bg);color:var(--fg);margin-bottom:12px}nav h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+color:var(--muted);margin:16px 0 4px}nav a{display:block;color:var(--fg);text-decoration:none;padding:3px 6px;border-radius:4px;
+font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}nav a:hover{background:var(--code)}
+main{padding:32px clamp(16px,4vw,56px);max-width:1000px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:0 0 24px}
+h2{margin:0 0 4px;font-size:20px}.kind{color:var(--muted);margin:0 0 12px}
+code{overflow-wrap:anywhere;background:var(--code);padding:1px 5px;border-radius:4px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+pre{background:var(--code);padding:14px;border-radius:8px;overflow:auto}pre code{padding:0;background:none;overflow-wrap:normal}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;margin:8px 0 16px;font-size:14px}th,td{text-align:left;padding:6px 8px;
+border-bottom:1px solid var(--line);vertical-align:top}table.meta th{width:180px;color:var(--muted);font-weight:500}
+details{margin-top:8px}summary{cursor:pointer;color:var(--accent)}blockquote{border-left:3px solid var(--line);margin:8px 0;
+padding:2px 12px;color:var(--muted)}.badge{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid;vertical-align:middle}
+.badge.high{color:var(--high)}.badge.medium{color:var(--medium)}.mermaid{background:var(--diagram);border-radius:8px;padding:8px;overflow:auto}
+a{color:var(--accent)}
+@media (max-width:800px){.layout{grid-template-columns:minmax(0,1fr)}nav{position:static;height:auto;max-height:45vh;border-right:0;border-bottom:1px solid var(--line)}section{padding:16px}table.meta th{width:auto}}
+</style></head><body><div class="layout"><nav><h1>STRY0012345 - Incident auto-assignment</h1><input id="q" placeholder="Filter components…" aria-label="Filter components"><a href="#overview">Overview</a><h3>Business Rule (2)</h3><a href="#business-rule-auto-assign-incident-by-category" data-name="auto-assign incident by category">Auto-assign incident by category</a><a href="#business-rule-sync-priority-to-incident-tasks" data-name="sync priority to incident tasks">Sync priority to incident tasks</a><h3>Client Script (1)</h3><a href="#client-script-suggest-group-on-category-change" data-name="suggest group on category change">Suggest group on category change</a><h3>Field (Dictionary) (1)</h3><a href="#dictionary-u-group" data-name="u_group">u_group</a><h3>Flow Designer (1)</h3><a href="#flow-p1-incident-escalation" data-name="p1 incident escalation">P1 incident escalation</a><h3>Notification (1)</h3><a href="#notification-incident-auto-assigned-notify-group" data-name="incident auto-assigned - notify group">Incident auto-assigned - notify group</a><h3>Scheduled Script Execution (1)</h3><a href="#scheduled-job-re-route-stale-default-group-incidents" data-name="re-route stale default group incidents">Re-route stale default group incidents</a><h3>Script Include (1)</h3><a href="#script-include-incidentassignmentutils" data-name="incidentassignmentutils">IncidentAssignmentUtils</a><h3>System Property (1)</h3><a href="#system-property-x-acme-incident-default-group" data-name="x_acme.incident.default_group">x_acme.incident.default_group</a><h3>Table (1)</h3><a href="#table-assignment-matrix" data-name="assignment matrix">Assignment Matrix</a></nav><main><section id="overview"><h2>STRY0012345 - Incident auto-assignment</h2><p>This delivery is update set <strong>STRY0012345 - Incident auto-assignment</strong> (Global).</p>
+<blockquote>Route new incidents to the right group automatically and escalate P1s.</blockquote>
+<p>It contains <strong>10</strong> component(s): 2 × Business Rule, 1 × Client Script, 1 × Field (Dictionary), 1 × Flow Designer, 1 × Notification, 1 × Scheduled Script Execution, 1 × Script Include, 1 × System Property and 1 × Table. Built by jane.dev (10).</p>
+<p><strong>Data touched:</strong> <code>incident</code>, <code>u_assignment_matrix</code>, <code>incident_task</code> and <code>sys_user_group</code>.</p>
+<h4>How the pieces fit together</h4>
+<ul>
+<li>Business Rule <strong>Auto-assign incident by category</strong> calls → Script Include <strong>IncidentAssignmentUtils</strong></li>
+<li>Business Rule <strong>Auto-assign incident by category</strong> fires event 'x_acme.incident.auto_assigned' → Notification <strong>Incident auto-assigned - notify group</strong></li>
+<li>Client Script <strong>Suggest group on category change</strong> calls → Script Include <strong>IncidentAssignmentUtils</strong></li>
+<li>Field (Dictionary) <strong>u_group</strong> field of → Table <strong>Assignment Matrix</strong></li>
+<li>Scheduled Script Execution <strong>Re-route stale default group incidents</strong> calls → Script Include <strong>IncidentAssignmentUtils</strong></li>
+<li>Script Include <strong>IncidentAssignmentUtils</strong> reads property → System Property <strong>x_acme.incident.default_group</strong></li>
+<li>Script Include <strong>IncidentAssignmentUtils</strong> reads table → Table <strong>Assignment Matrix</strong></li>
+</ul>
+<h4>Where to start reading</h4>
+<p>These components are triggered by users, data changes or schedules (entry points):</p>
+<ul>
+<li>Business Rule <strong>Auto-assign incident by category</strong> — Server-side rule that runs <strong>before</strong> a record is <strong>inserted</strong> on <code>incident</code>, only when <code>current.category.changes() || current.assignment_group.nil()</code>.</li>
+<li>Business Rule <strong>Sync priority to incident tasks</strong> — Server-side rule that runs <strong>after</strong> a record is <strong>updated</strong> on <code>incident</code> (filter: <code>priorityVALCHANGES^EQ</code>).</li>
+<li>Client Script <strong>Suggest group on category change</strong> — Browser-side script that runs when the <code>category</code> field changes on <code>incident</code>.</li>
+<li>Flow Designer <strong>P1 incident escalation</strong> — Flow Designer flow triggered by <strong>Created or Updated</strong> on <code>incident</code> when <code>priority=1^active=true</code>, with 3 step(s).</li>
+<li>Scheduled Script Execution <strong>Re-route stale default group incidents</strong> — Background job that runs on a schedule (daily at 02:00:00).</li>
+</ul>
+<h4>Review hot spots</h4>
+<ul>
+<li>🔴 <strong>Sync priority to incident tasks</strong> — Calls current.update() inside a business rule - this re-triggers business rules and can cause recursion. Use a 'before' rule and set fields directly instead.</li>
+<li>🟠 <strong>Re-route stale default group incidents</strong> — Contains hard-coded sys_id values - these differ between instances. Use a system property or look the record up by a stable key.</li>
+</ul></section><section><h2>Component map</h2><pre class="mermaid">flowchart LR
+    n0[&quot;Auto-assign incident by category&lt;br/&gt;&lt;small&gt;Business Rule&lt;/small&gt;&quot;]
+    n1[&quot;Suggest group on category change&lt;br/&gt;&lt;small&gt;Client Script&lt;/small&gt;&quot;]
+    n2[&quot;u_group&lt;br/&gt;&lt;small&gt;Field (Dictionary)&lt;/small&gt;&quot;]
+    n3[&quot;Incident auto-assigned - notify group&lt;br/&gt;&lt;small&gt;Notification&lt;/small&gt;&quot;]
+    n4[&quot;Re-route stale default group incidents&lt;br/&gt;&lt;small&gt;Scheduled Script Execution&lt;/small&gt;&quot;]
+    n5[&quot;IncidentAssignmentUtils&lt;br/&gt;&lt;small&gt;Script Include&lt;/small&gt;&quot;]
+    n6[&quot;x_acme.incident.default_group&lt;br/&gt;&lt;small&gt;System Property&lt;/small&gt;&quot;]
+    n7[&quot;Assignment Matrix&lt;br/&gt;&lt;small&gt;Table&lt;/small&gt;&quot;]
+    n0 --&gt;|&quot;calls&quot;| n5
+    n0 --&gt;|&quot;fires event &#x27;x_acme.incident.auto_assigned&#x27;&quot;| n3
+    n1 --&gt;|&quot;calls&quot;| n5
+    n2 --&gt;|&quot;field of&quot;| n7
+    n4 --&gt;|&quot;calls&quot;| n5
+    n5 --&gt;|&quot;reads property&quot;| n6
+    n5 --&gt;|&quot;reads table&quot;| n7</pre></section><section><h2>Components</h2><table><thead><tr><th>Component</th><th>Type</th><th>Applies to</th><th>Status</th><th>Updated by</th></tr></thead><tbody><tr><td><a href="#business-rule-auto-assign-incident-by-category">Auto-assign incident by category</a></td><td>Business Rule</td><td>incident</td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#business-rule-sync-priority-to-incident-tasks">Sync priority to incident tasks</a></td><td>Business Rule</td><td>incident</td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#client-script-suggest-group-on-category-change">Suggest group on category change</a></td><td>Client Script</td><td>incident</td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#dictionary-u-group">u_group</a></td><td>Field (Dictionary)</td><td>u_assignment_matrix</td><td>—</td><td>jane.dev</td></tr><tr><td><a href="#flow-p1-incident-escalation">P1 incident escalation</a></td><td>Flow Designer</td><td>incident</td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#notification-incident-auto-assigned-notify-group">Incident auto-assigned - notify group</a></td><td>Notification</td><td>incident</td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#scheduled-job-re-route-stale-default-group-incidents">Re-route stale default group incidents</a></td><td>Scheduled Script Execution</td><td></td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#script-include-incidentassignmentutils">IncidentAssignmentUtils</a></td><td>Script Include</td><td></td><td>active</td><td>jane.dev</td></tr><tr><td><a href="#system-property-x-acme-incident-default-group">x_acme.incident.default_group</a></td><td>System Property</td><td></td><td>—</td><td>jane.dev</td></tr><tr><td><a href="#table-assignment-matrix">Assignment Matrix</a></td><td>Table</td><td></td><td>—</td><td>jane.dev</td></tr></tbody></table></section><section id="business-rule-auto-assign-incident-by-category" class="artifact"><h2>Auto-assign incident by category </h2><p class="kind">Business Rule · incident</p><table class="meta"><tr><th>Type</th><td>Business Rule</td></tr><tr><th>Applies to</th><td>incident</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Advanced</th><td>true</td></tr><tr><th>Record type</th><td>sys_script</td></tr><tr><th>Trigger · when</th><td>before</td></tr><tr><th>Trigger · operations</th><td>insert</td></tr><tr><th>Trigger · order</th><td>100</td></tr><tr><th>Trigger · condition</th><td>current.category.changes() || current.assignment_group.nil()</td></tr></table><div class="explain"><p><strong>In short:</strong> Server-side rule that runs <strong>before</strong> a record is <strong>inserted</strong> on <code>incident</code>, only when <code>current.category.changes() || current.assignment_group.nil()</code>.</p>
+<p><strong>Purpose (from the record):</strong> Sets the assignment group on new incidents using the category matrix.</p>
+<h4>What it does</h4>
+<ul>
+<li>Sets field(s) <code>assignment_group</code> and <code>work_notes</code></li>
+<li>Calls <code>IncidentAssignmentUtils</code></li>
+<li>Fires event(s) <code>x_acme.incident.auto_assigned</code></li>
+<li>Can abort the database operation (setAbortAction)</li>
+<li>Shows an error message to the user</li>
+</ul>
+<h4>Developer notes (from code comments)</h4>
+<ul>
+<li>null when async</li>
+<li>Only auto-assign when the caller did not pick a group</li>
+</ul>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Uses → Script Include <strong>IncidentAssignmentUtils</strong> (calls)</li>
+<li>Uses → Notification <strong>Incident auto-assigned - notify group</strong> (fires event 'x_acme.incident.auto_assigned')</li>
+</ul></div><details><summary>Script · 16 lines</summary><pre><code>(function executeRule(current, previous /*null when async*/) {
+    // Only auto-assign when the caller did not pick a group
+    if (!current.assignment_group.nil())
+        return;
+
+    var utils = new IncidentAssignmentUtils();
+    var groupId = utils.getGroupForCategory(current.getValue(&#x27;category&#x27;), current.getValue(&#x27;location&#x27;));
+    if (groupId) {
+        current.assignment_group = groupId;
+        current.work_notes = &#x27;Auto-assigned by category matrix&#x27;;
+        gs.eventQueue(&#x27;x_acme.incident.auto_assigned&#x27;, current, groupId, current.getValue(&#x27;category&#x27;));
+    } else {
+        gs.addErrorMessage(&#x27;No assignment group found for this category. Please choose one.&#x27;);
+        current.setAbortAction(true);
+    }
+})(current, previous);</code></pre></details></section><section id="business-rule-sync-priority-to-incident-tasks" class="artifact"><h2>Sync priority to incident tasks <span class="badge high">high</span></h2><p class="kind">Business Rule · incident</p><table class="meta"><tr><th>Type</th><td>Business Rule</td></tr><tr><th>Applies to</th><td>incident</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Advanced</th><td>true</td></tr><tr><th>Record type</th><td>sys_script</td></tr><tr><th>Trigger · when</th><td>after</td></tr><tr><th>Trigger · operations</th><td>update</td></tr><tr><th>Trigger · order</th><td>200</td></tr><tr><th>Trigger · filter_condition</th><td>priorityVALCHANGES^EQ</td></tr></table><div class="explain"><p><strong>In short:</strong> Server-side rule that runs <strong>after</strong> a record is <strong>updated</strong> on <code>incident</code> (filter: <code>priorityVALCHANGES^EQ</code>).</p>
+<h4>What it does</h4>
+<ul>
+<li>Reads <code>incident_task</code></li>
+<li>Writes to (create/update/delete) <code>incident_task</code></li>
+<li>Sets field(s) <code>u_last_priority_sync</code></li>
+</ul>
+<h4>Developer notes (from code comments)</h4>
+<ul>
+<li>Copy the priority to all child tasks so SLAs stay aligned</li>
+</ul>
+<h4>Review notes</h4>
+<ul>
+<li>🔴 <strong>high</strong> — Calls current.update() inside a business rule - this re-triggers business rules and can cause recursion. Use a 'before' rule and set fields directly instead.</li>
+<li>🟡 <strong>low</strong> — Leftover debug logging (gs.log/gs.print/console.log).</li>
+<li>🟡 <strong>low</strong> — No description recorded on the record.</li>
+</ul></div><details><summary>Script · 13 lines</summary><pre><code>(function executeRule(current, previous) {
+    // Copy the priority to all child tasks so SLAs stay aligned
+    var task = new GlideRecord(&#x27;incident_task&#x27;);
+    task.addQuery(&#x27;incident&#x27;, current.sys_id);
+    task.query();
+    while (task.next()) {
+        task.priority = current.priority;
+        task.update();
+    }
+    current.u_last_priority_sync = new GlideDateTime();
+    current.update();
+    gs.log(&#x27;Priority synced for &#x27; + current.number);
+})(current, previous);</code></pre></details></section><section id="client-script-suggest-group-on-category-change" class="artifact"><h2>Suggest group on category change </h2><p class="kind">Client Script · incident</p><table class="meta"><tr><th>Type</th><td>Client Script</td></tr><tr><th>Applies to</th><td>incident</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Record type</th><td>sys_script_client</td></tr><tr><th>Trigger · type</th><td>onChange</td></tr><tr><th>Trigger · field</th><td>category</td></tr><tr><th>Trigger · ui_type</th><td>All</td></tr></table><div class="explain"><p><strong>In short:</strong> Browser-side script that runs when the <code>category</code> field changes on <code>incident</code>.</p>
+<p><strong>Purpose (from the record):</strong> Pre-fills the assignment group on the form as soon as the category is chosen.</p>
+<h4>What it does</h4>
+<ul>
+<li>Sets field(s) <code>assignment_group</code></li>
+<li>Calls <code>IncidentAssignmentUtils</code></li>
+<li>Shows messages on the form</li>
+<li>Calls the server asynchronously (GlideAjax)</li>
+</ul>
+<h4>Developer notes (from code comments)</h4>
+<ul>
+<li>Ask the server which group handles this category and pre-fill it</li>
+</ul>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Uses → Script Include <strong>IncidentAssignmentUtils</strong> (calls)</li>
+</ul></div><details><summary>Script · 18 lines</summary><pre><code>function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+    if (isLoading || newValue === &#x27;&#x27;) {
+        return;
+    }
+    // Ask the server which group handles this category and pre-fill it
+    var ga = new GlideAjax(&#x27;IncidentAssignmentUtils&#x27;);
+    ga.addParam(&#x27;sysparm_name&#x27;, &#x27;ajaxGetGroup&#x27;);
+    ga.addParam(&#x27;sysparm_category&#x27;, newValue);
+    ga.addParam(&#x27;sysparm_location&#x27;, g_form.getValue(&#x27;location&#x27;));
+    ga.getXMLAnswer(function(answer) {
+        if (!answer) {
+            g_form.showFieldMsg(&#x27;category&#x27;, &#x27;No default group for this category&#x27;, &#x27;info&#x27;);
+            return;
+        }
+        var group = JSON.parse(answer);
+        g_form.setValue(&#x27;assignment_group&#x27;, group.sys_id, group.name);
+    });
+}</code></pre></details></section><section id="dictionary-u-group" class="artifact"><h2>u_group </h2><p class="kind">Field (Dictionary) · u_assignment_matrix</p><table class="meta"><tr><th>Type</th><td>Field (Dictionary)</td></tr><tr><th>Applies to</th><td>u_assignment_matrix</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>—</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Label</th><td>Group</td></tr><tr><th>Type</th><td>Reference</td></tr><tr><th>Reference</th><td>sys_user_group</td></tr><tr><th>Mandatory</th><td>true</td></tr><tr><th>Record type</th><td>sys_dictionary</td></tr></table><div class="explain"><p><strong>In short:</strong> Field <code>u_assignment_matrix.u_group</code> (Reference referencing <code>sys_user_group</code>).</p>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Uses → Table <strong>Assignment Matrix</strong> (field of)</li>
+</ul></div></section><section id="flow-p1-incident-escalation" class="artifact"><h2>P1 incident escalation </h2><p class="kind">Flow Designer · incident</p><table class="meta"><tr><th>Type</th><td>Flow Designer</td></tr><tr><th>Applies to</th><td>incident</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Flow type</th><td>flow</td></tr><tr><th>Run as</th><td>system</td></tr><tr><th>Flow status</th><td>published</td></tr><tr><th>Internal name</th><td>p1_incident_escalation</td></tr><tr><th>Record type</th><td>sys_hub_flow</td></tr><tr><th>Trigger · type</th><td>Created or Updated</td></tr><tr><th>Trigger · table</th><td>incident</td></tr><tr><th>Trigger · condition</th><td>priority=1^active=true</td></tr></table><div class="explain"><p><strong>In short:</strong> Flow Designer flow triggered by <strong>Created or Updated</strong> on <code>incident</code> when <code>priority=1^active=true</code>, with 3 step(s).</p>
+<p><strong>Purpose (from the record):</strong> Pages the on-call manager and opens a major incident bridge for P1 incidents.</p>
+<h4>Step by step</h4>
+<ol>
+<li><strong>Look Up Record</strong> — Find the on-call manager for the assignment group <em>(action)</em></li>
+<li><strong>Send Notification</strong> — Page the on-call manager <em>(action)</em></li>
+<li><strong>Update Record</strong> — Set major incident state to 'Proposed' <em>(action)</em></li>
+</ol></div></section><section id="notification-incident-auto-assigned-notify-group" class="artifact"><h2>Incident auto-assigned - notify group </h2><p class="kind">Notification · incident</p><table class="meta"><tr><th>Type</th><td>Notification</td></tr><tr><th>Applies to</th><td>incident</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Subject</th><td>${number} has been assigned to your group</td></tr><tr><th>Recipient groups</th><td>event.parm1</td></tr><tr><th>Record type</th><td>sysevent_email_action</td></tr><tr><th>Trigger · event</th><td>x_acme.incident.auto_assigned</td></tr></table><div class="explain"><p><strong>In short:</strong> Sends an email notification when the <code>x_acme.incident.auto_assigned</code> event is fired for <code>incident</code> records.</p>
+<p><strong>Purpose (from the record):</strong> Tells the group manager when an incident was routed to them automatically.</p>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Used by ← Business Rule <strong>Auto-assign incident by category</strong> (fires event 'x_acme.incident.auto_assigned')</li>
+</ul></div></section><section id="scheduled-job-re-route-stale-default-group-incidents" class="artifact"><h2>Re-route stale default group incidents <span class="badge medium">medium</span></h2><p class="kind">Scheduled Script Execution</p><table class="meta"><tr><th>Type</th><td>Scheduled Script Execution</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Record type</th><td>sysauto_script</td></tr><tr><th>Trigger · run</th><td>daily</td></tr><tr><th>Trigger · time</th><td>1970-01-01 02:00:00</td></tr></table><div class="explain"><p><strong>In short:</strong> Background job that runs on a schedule (daily at 02:00:00).</p>
+<p><strong>Purpose (from the record):</strong> Nightly clean-up of incidents parked in the default group.</p>
+<h4>What it does</h4>
+<ul>
+<li>Reads <code>incident</code></li>
+<li>Writes to (create/update/delete) <code>incident</code></li>
+<li>Calls <code>IncidentAssignmentUtils</code></li>
+<li>Suppresses business rules/engines on its updates (setWorkflow(false))</li>
+</ul>
+<h4>Developer notes (from code comments)</h4>
+<ul>
+<li>Nightly: re-route incidents stuck in the default group for more than 4 hours</li>
+</ul>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Uses → Script Include <strong>IncidentAssignmentUtils</strong> (calls)</li>
+</ul>
+<h4>Review notes</h4>
+<ul>
+<li>🟠 <strong>medium</strong> — Contains hard-coded sys_id values - these differ between instances. Use a system property or look the record up by a stable key.</li>
+<li>ℹ️ <strong>info</strong> — setWorkflow(false) skips business rules, notifications and audit on the updated records.</li>
+</ul></div><details><summary>Script · 13 lines</summary><pre><code>// Nightly: re-route incidents stuck in the default group for more than 4 hours
+var gr = new GlideRecord(&#x27;incident&#x27;);
+gr.addEncodedQuery(&#x27;active=true^assignment_group=d625dccec0a8016700a222a0f7900d06^sys_updated_onRELATIVELT@hour@ago@4&#x27;);
+gr.query();
+var utils = new IncidentAssignmentUtils();
+while (gr.next()) {
+    var groupId = utils.getGroupForCategory(gr.getValue(&#x27;category&#x27;), gr.getValue(&#x27;location&#x27;));
+    if (groupId) {
+        gr.assignment_group = groupId;
+        gr.setWorkflow(false);
+        gr.update();
+    }
+}</code></pre></details></section><section id="script-include-incidentassignmentutils" class="artifact"><h2>IncidentAssignmentUtils </h2><p class="kind">Script Include</p><table class="meta"><tr><th>Type</th><td>Script Include</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>active</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>API name</th><td>global.IncidentAssignmentUtils</td></tr><tr><th>Client callable</th><td>true</td></tr><tr><th>Accessible from</th><td>package_private</td></tr><tr><th>Record type</th><td>sys_script_include</td></tr><tr><th>Trigger · invoked</th><td>called from other server scripts and from the browser via GlideAjax</td></tr></table><div class="explain"><p><strong>In short:</strong> Reusable server-side library, called from other server scripts and from the browser via GlideAjax, exposing <code>getGroupForCategory</code> and <code>ajaxGetGroup</code>.</p>
+<p><strong>Purpose (from the record):</strong> Looks up the right support group for an incident from the assignment matrix.</p>
+<h4>What it does</h4>
+<ul>
+<li>Reads <code>u_assignment_matrix</code> and <code>sys_user_group</code></li>
+<li>Reads configuration <code>x_acme.incident.default_group</code></li>
+</ul>
+<h4>Functions</h4>
+<ul>
+<li><code>getGroupForCategory()</code></li>
+<li><code>ajaxGetGroup()</code></li>
+</ul>
+<h4>Developer notes (from code comments)</h4>
+<ul>
+<li>Finds the support group for a category using the u_assignment_matrix table.</li>
+<li>Fall back to the default service desk group configured in a property</li>
+<li>Called from the client script via GlideAjax</li>
+</ul>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Uses → System Property <strong>x_acme.incident.default_group</strong> (reads property)</li>
+<li>Uses → Table <strong>Assignment Matrix</strong> (reads table)</li>
+<li>Used by ← Business Rule <strong>Auto-assign incident by category</strong> (calls)</li>
+<li>Used by ← Client Script <strong>Suggest group on category change</strong> (calls)</li>
+<li>Used by ← Scheduled Script Execution <strong>Re-route stale default group incidents</strong> (calls)</li>
+</ul></div><details><summary>Script · 33 lines</summary><pre><code>var IncidentAssignmentUtils = Class.create();
+IncidentAssignmentUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+
+    // Finds the support group for a category using the u_assignment_matrix table.
+    getGroupForCategory: function(category, location) {
+        var matrix = new GlideRecord(&#x27;u_assignment_matrix&#x27;);
+        matrix.addQuery(&#x27;u_category&#x27;, category);
+        matrix.addQuery(&#x27;u_location&#x27;, location);
+        matrix.addActiveQuery();
+        matrix.orderBy(&#x27;u_priority&#x27;);
+        matrix.setLimit(1);
+        matrix.query();
+        if (matrix.next()) {
+            return matrix.getValue(&#x27;u_group&#x27;);
+        }
+        // Fall back to the default service desk group configured in a property
+        return gs.getProperty(&#x27;x_acme.incident.default_group&#x27;);
+    },
+
+    /* Called from the client script via GlideAjax */
+    ajaxGetGroup: function() {
+        var category = this.getParameter(&#x27;sysparm_category&#x27;);
+        var location = this.getParameter(&#x27;sysparm_location&#x27;);
+        var groupId = this.getGroupForCategory(category, location);
+        var group = new GlideRecord(&#x27;sys_user_group&#x27;);
+        if (group.get(groupId)) {
+            return JSON.stringify({ sys_id: groupId, name: group.getDisplayValue() });
+        }
+        return &#x27;&#x27;;
+    },
+
+    type: &#x27;IncidentAssignmentUtils&#x27;
+});</code></pre></details></section><section id="system-property-x-acme-incident-default-group" class="artifact"><h2>x_acme.incident.default_group </h2><p class="kind">System Property</p><table class="meta"><tr><th>Type</th><td>System Property</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>—</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Value</th><td>d625dccec0a8016700a222a0f7900d06</td></tr><tr><th>Type</th><td>string</td></tr><tr><th>Record type</th><td>sys_properties</td></tr></table><div class="explain"><p><strong>In short:</strong> Configuration value <code>x_acme.incident.default_group</code> = <code>d625dccec0a8016700a222a0f7900d06</code>.</p>
+<p><strong>Purpose (from the record):</strong> Fallback assignment group when no matrix entry matches.</p>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Used by ← Script Include <strong>IncidentAssignmentUtils</strong> (reads property)</li>
+</ul></div></section><section id="table-assignment-matrix" class="artifact"><h2>Assignment Matrix </h2><p class="kind">Table</p><table class="meta"><tr><th>Type</th><td>Table</td></tr><tr><th>Application</th><td>global</td></tr><tr><th>Status</th><td>—</td></tr><tr><th>Created by</th><td>jane.dev</td></tr><tr><th>Last updated</th><td>2026-09-30 10:15:00 by jane.dev</td></tr><tr><th>Table name</th><td>u_assignment_matrix</td></tr><tr><th>Accessible from</th><td>public</td></tr><tr><th>Record type</th><td>sys_db_object</td></tr></table><div class="explain"><p><strong>In short:</strong> Table.</p>
+<h4>Connections in this delivery</h4>
+<ul>
+<li>Used by ← Field (Dictionary) <strong>u_group</strong> (field of)</li>
+<li>Used by ← Script Include <strong>IncidentAssignmentUtils</strong> (reads table)</li>
+</ul></div></section></main></div><script>
+document.getElementById('q').addEventListener('input',e=>{const q=e.target.value.toLowerCase();
+document.querySelectorAll('nav a[data-name]').forEach(a=>{a.style.display=a.dataset.name.includes(q)?'':'none'})});
+</script><script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";mermaid.initialize({startOnLoad:true,theme:"neutral"});</script></body></html>

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devdoc"
+version = "0.1.0"
+description = "Generate walkthrough documentation for ServiceNow, SuccessFactors and other platform development work"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+ai = ["anthropic>=1.0"]
+secure = ["defusedxml"]
+dev = ["pytest", "anthropic>=1.0"]
+
+[project.scripts]
+devdoc = "devdoc.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["devdoc*"]

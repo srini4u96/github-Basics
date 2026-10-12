@@ -1,0 +1,2 @@
+type,integrationId,integrationName,sourceEntity,destination,schedule,description,createdBy,lastModifiedDate,fieldMappings
+integration,IC_BADGE_EXPORT,Daily badge system export,User,SFTP: badge-vendor.example.com,Daily 01:00 UTC,Sends new and changed employees to the badge vendor.,sf.admin.mike,2026-09-27T08:00:00,"[{""source"":""userId"",""target"":""EMPLOYEE_ID""},{""source"":""firstName"",""target"":""FIRST_NAME""},{""source"":""lastName"",""target"":""LAST_NAME""},{""source"":""location"",""target"":""SITE"",""transform"":""Lookup site code""}]"
