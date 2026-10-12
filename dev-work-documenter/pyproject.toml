@@ -13,7 +13,7 @@ dependencies = []
 [project.optional-dependencies]
 ai = ["anthropic>=1.0"]
 secure = ["defusedxml"]
-dev = ["pytest"]
+dev = ["pytest", "anthropic>=1.0"]
 
 [project.scripts]
 devdoc = "devdoc.cli:main"

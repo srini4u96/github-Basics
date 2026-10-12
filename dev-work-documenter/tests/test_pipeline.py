@@ -1,6 +1,8 @@
 import json
 from types import SimpleNamespace
 
+import pytest
+
 from conftest import SAMPLES
 
 from devdoc import build_documentation
@@ -51,6 +53,7 @@ class FakeMessages:
 
 
 def test_claude_explainer_with_fake_client(tmp_path):
+    pytest.importorskip("anthropic")
     fake = FakeMessages()
     client = SimpleNamespace(beta=SimpleNamespace(messages=fake))
     docset = build_documentation("servicenow", [SAMPLES / "servicenow"], explainer="claude",
@@ -63,6 +66,7 @@ def test_claude_explainer_with_fake_client(tmp_path):
 
 
 def test_claude_refusal_falls_back_to_offline_text():
+    pytest.importorskip("anthropic")
     class Refusing(FakeMessages):
         def create(self, **kwargs):
             return SimpleNamespace(stop_reason="refusal", content=[])

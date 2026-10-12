@@ -133,7 +133,7 @@ devdoc/
   cli.py, pipeline.py
 samples/                example ServiceNow update set, SuccessFactors exports, generic JSON
 examples/               generated documentation for the ServiceNow sample
-tests/                  pytest suite (python -m pytest tests)
+tests/                  pytest suite: pip install -e ".[dev]" && python -m pytest tests
 ```
 
 ## Known limitations
